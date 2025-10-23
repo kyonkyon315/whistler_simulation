@@ -27,7 +27,7 @@ int main(){
     field.at<FieldType::B,Direction::x>(4);
 
 
-    Developper developper();
+    Developper developper;
 
     Index num_time_step=1000;
     Value dt=0.1;

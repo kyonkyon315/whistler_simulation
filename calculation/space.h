@@ -15,6 +15,7 @@ class Space{
     const Index r_theta_phi;
     const Index theta_phi;
     const Index phi;
+    const Index bias;
     std::vector<Value> dV;
     std::vector<Value> velocity;
     Space(
@@ -40,13 +41,19 @@ class Space{
         ),
         phi(
             (axis_p.get_num_grid()+2*overlap)
-        )
+        ),
+        bias(overlap*(r_theta_phi+theta_phi+phi+1))
     {
         pre_calc_dV();
     }
 
     Index id2vec_id(Index x,Index r,Index t,Index p)const{
-        
+        //return r_theta_phi*(x+overlap)+theta_phi*(r+overlap)+phi*(t+overlap)+p+overlap;
+        //=
+        return r_theta_phi*x+theta_phi*r+phi*t+p+bias/*=overlap*(r_theta_phi+theta_phi+phi+1)*/;
+    }
+    Index id2vec_id(Index x,Index r,Index t,Index p)const{
+        return r_theta_phi*x+theta_phi*r+phi*t+p;
     }
 
     private:

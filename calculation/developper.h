@@ -4,6 +4,9 @@
 #include "distribution_function.h"
 #include "electro_magnetic_field.h"
 #include "current.h"
+
+#include "distribution_function_developper.h"
+#include "current_calculator.h"
 class Developper{
 
     using Value = double;

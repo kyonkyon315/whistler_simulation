@@ -64,21 +64,21 @@ class ElectroMagneticField{
     }
 
     void apply_boundary_condition() {
-    // 全ての成分（Ex,Ey,Ez,Bx,By,Bz の main/half）について処理
-    for (int comp = 0; comp < 12; ++comp) {
-        Value* f = field.data() + comp * stride;
+        // 全ての成分（Ex,Ey,Ez,Bx,By,Bz の main/half）について処理
+        for (int comp = 0; comp < 12; ++comp) {
+            Value* f = field.data() + comp * stride;
 
-        // 左側のゴーストセルに右端の値をコピー
-        for (Index i = 0; i < overlap; ++i) {
-            f[i] = f[grid_size + i];  
-        }
+            // 左側のゴーストセルに右端の値をコピー
+            for (Index i = 0; i < overlap; ++i) {
+                f[i] = f[grid_size + i];  
+            }
 
-        // 右側のゴーストセルに左端の値をコピー
-        for (Index i = 0; i < overlap; ++i) {
-            f[grid_size + overlap + i] = f[overlap + i];
+            // 右側のゴーストセルに左端の値をコピー
+            for (Index i = 0; i < overlap; ++i) {
+                f[grid_size + overlap + i] = f[overlap + i];
+            }
         }
     }
-}
     
 };
 #endif// ELECTROMAGNETICFIELD_H

@@ -17,6 +17,7 @@ class DistributionFunction{
     const Index phi;
     const Index overlap;
     std::vector<Value> f;
+    std::vector<Value> dV_table;
 
     public:
     DistributionFunction(
@@ -50,6 +51,14 @@ class DistributionFunction{
             (axis_info_v_theta.get_num_grid()+2*overlap)*
             (axis_info_v_phi.get_num_grid()+2*overlap)
         );
+
+        dV_table.resize(
+            (axis_info_vr.get_num_grid()+2*overlap)*
+            (axis_info_v_theta.get_num_grid()+2*overlap)*
+            (axis_info_v_phi.get_num_grid()+2*overlap)
+        );
+
+        precompute_dV();
     }
     DistributionFunction(const DistributionFunction&r):
         axis_info_x(r.axis_info_x),
@@ -211,6 +220,20 @@ class DistributionFunction{
                     }
                 }
             }
+        }
+    }
+
+    void mul(Value val){
+        Index f_size = f.size();
+        for(Index i=0;i<f_size;++i){
+            f[i]*=val;
+        }
+    }
+
+    void add(const DistributionFunction& r_f){
+        Index f_size = f.size();
+        for(Index i=0;i<f_size;++i){
+            f[i] += r_f.f[i];
         }
     }
 };
