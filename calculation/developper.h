@@ -7,22 +7,35 @@
 
 #include "distribution_function_developper.h"
 #include "current_calculator.h"
+#include "fdtd_solver.h"
 class Developper{
 
     using Value = double;
     using Index = int;
 
-    private:
-    DistributionFunction k1,k2;
+private:
+    DistributionFunction k1;
+    DistributionFunction k2;
     DistributionFunctionDevelopper developper;
     CurrentCalculator current_calculator;
     FDTDSolver  fdtd_solver;
 
 
-    public:
-    Developper(const DistributionFunction& f):
-        k1(f),k2(f)
-    {}
+public:
+    Developper(
+        const DistributionFunction& f,
+        const AxisInfo_x& axis_info_x,
+        const AxisInfo_r& axis_info_vr,
+        const AxisInfo_theta& axis_info_v_theta,
+        const AxisInfo_phi& axis_info_v_phi
+    ): 
+        k1(f),            // ← コピーコンストラクタを使って初期化
+        k2(f),
+        developper(),     // ← デフォルトコンストラクタを呼ぶ（必要なら引数付きに変更）
+        current_calculator(axis_info_x,axis_info_vr,axis_info_v_theta,axis_info_v_phi),
+        fdtd_solver()
+    {
+    }
 
     void update(
         DistributionFunction& f,

@@ -2,17 +2,18 @@
 #define CURRENT_CALCULATOR_H
 #include "distribution_function.h"
 #include "current.h"
+#include "parameters.h"
 class CurrentCalculator{
     using Value = double;
     using Index = int;
 
-    private:
+private:
     const AxisInfo_x& axis_x;
     const AxisInfo_r& axis_r;
     const AxisInfo_theta& axis_t;
     const AxisInfo_phi& axis_p;
 
-    public:
+public:
     CurrentCalculator(
         const AxisInfo_x& axis_x,
         const AxisInfo_r& axis_r,
@@ -39,17 +40,18 @@ class CurrentCalculator{
                 for(Index t=0;t<t_size;++t){
                     for(Index p=0;p<p_size;++p){
                         target.at<Direction::x>(x)
-                            +=  f.dV(x,r,t,p)*
-                                f.get_velocity<Direction::x>(x,r,t,p);
+                            +=  f.dV_at(x,r,t,p)*
+                                f.get_velocity_at<Direction::x>(x,r,t,p);
                         target.at<Direction::y>(x)
-                            +=  f.dV(x,r,t,p)*
-                                f.get_velocity<Direction::y>(x,r,t,p);
+                            +=  f.dV_at(x,r,t,p)*
+                                f.get_velocity_at<Direction::y>(x,r,t,p);
                         target.at<Direction::z>(x)
-                            +=  f.dV(x,r,t,p)*
-                                f.get_velocity<Direction::z>(x,r,t,p);
+                            +=  f.dV_at(x,r,t,p)*
+                                f.get_velocity_at<Direction::z>(x,r,t,p);
                     }
                 }
             }
+            Value q = Parameters::elementary_charge;
             target.at<Direction::x>(x)*=q;
             target.at<Direction::y>(x)*=q;
             target.at<Direction::z>(x)*=q;

@@ -1,9 +1,9 @@
 #ifndef CURRENT_H
 #define CURRENT_H
 #include "axis_info.h"
-#include <vector>
+#include "direction.h"
 
-enum class Direction { x, y, z };
+#include <vector>
 
 
 class Current{
@@ -32,13 +32,13 @@ class Current{
     const Value& at(Index id) const {
         constexpr Index d       = (dir==Direction::x ? 0 : (dir==Direction::y ? 1 : 2));
         constexpr Index idx     = d ;
-        return field[idx*stride + id + overlap];
+        return current[idx*stride + id + overlap];
     }
     template<Direction dir>
     Value& at(Index id){
         constexpr Index d       = (dir==Direction::x ? 0 : (dir==Direction::y ? 1 : 2));
         constexpr Index idx     = d ;
-        return field[idx*stride + id + overlap];
+        return current[idx*stride + id + overlap];
     }
 
 

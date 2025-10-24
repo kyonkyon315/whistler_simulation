@@ -2,6 +2,8 @@
 #define AXISINFO_H
 #include <cassert>
 #define PI 3.14159265358979323846
+
+
 class AxisInfo_x{
     using Value = double;
     using Index = int;
@@ -17,9 +19,10 @@ class AxisInfo_x{
         grid_size((end-begin)/static_cast<Value>(num_grid-1)),
         num_grid(num_grid)
     {}
-    Value operator[](Index id){return begin+grid_size*static_cast<Value>(id);}
+    Value operator[](Index id)const{return begin+grid_size*static_cast<Value>(id);}
     Value get_begin()const{return begin;}
     Value get_end()const{return end;}
+    Value get_grid_size()const{return grid_size;}
     Index get_num_grid()const{return num_grid;}
 };
 
@@ -41,9 +44,10 @@ class AxisInfo_r{
         grid_size(2.*begin),
         num_grid(num_grid)
     {}
-    Value operator[](Index id){return begin+grid_size*static_cast<Value>(id);}
+    Value operator[](Index id)const{return begin+grid_size*static_cast<Value>(id);}
     Value get_begin()const{return begin;}
     Value get_end()const{return end;}
+    Value get_grid_size()const{return grid_size;}
     Index get_num_grid()const{return num_grid;}
 };
 
@@ -65,9 +69,10 @@ class AxisInfo_theta{
         grid_size(2.*begin),
         num_grid(num_grid)
     {}
-    Value operator[](Index id){return begin+grid_size*static_cast<Value>(id);}
+    Value operator[](Index id)const{return begin+grid_size*static_cast<Value>(id);}
     Value get_begin()const{return begin;}
     Value get_end()const{return end;}
+    Value get_grid_size()const{return grid_size;}
     Index get_num_grid()const{return num_grid;}
 };
 
@@ -91,9 +96,10 @@ class AxisInfo_phi{
     {
         assert(num_grid%2==0);
     }
-    Value operator[](Index id){return begin+grid_size*static_cast<Value>(id);}
+    Value operator[](Index id)const{return begin+grid_size*static_cast<Value>(id);}
     Value get_begin()const{return begin;}
     Value get_end()const{return end;}
+    Value get_grid_size()const{return grid_size;}
     Index get_num_grid()const{return num_grid;}
 };
 

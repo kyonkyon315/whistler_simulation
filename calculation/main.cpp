@@ -3,6 +3,7 @@
 #include "distribution_function.h"
 #include "electro_magnetic_field.h"
 #include "current.h"
+#include "developper.h"
 using Value = double;
 using Index = int;
 
@@ -27,7 +28,7 @@ int main(){
     field.at<FieldType::B,Direction::x>(4);
 
 
-    Developper developper;
+    Developper developper(f,x,v_r,v_theta,v_phi);
 
     Index num_time_step=1000;
     Value dt=0.1;

@@ -1,10 +1,10 @@
 #ifndef ELECTROMAGNETICFIELD_H
 #define ELECTROMAGNETICFIELD_H
 #include "axis_info.h"
+#include "direction.h"
 #include <vector>
 
 enum class FieldType { E, B };
-enum class Direction { x, y, z };
 enum class TimeStagger { main, half };
 
 class ElectroMagneticField{
