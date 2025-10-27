@@ -20,12 +20,17 @@ int main(){
     AxisInfo_theta v_theta(vtheta_num_grid);
     AxisInfo_phi v_phi(vphi_num_grid);
 
+
     DistributionFunction f(x,v_r,v_theta,v_phi);
     ElectroMagneticField field(x);
+    std::cout<<v_phi[50]<<std::endl;
+
     Current current(x);
+    std::cout<<v_phi[50]<<std::endl;
+
     current.at<Direction::x>(4);
 
-    field.at<FieldType::B,Direction::x>(4);
+    std::cout<<field.at<FieldType::B,Direction::x>(4)<<std::endl;
 
 
     Developper developper(f,x,v_r,v_theta,v_phi);
@@ -33,6 +38,7 @@ int main(){
     Index num_time_step=1000;
     Value dt=0.1;
     for(Index step=0;step<num_time_step;++step){
+        std::cout<<step<<"\n";
         developper.update(f,field,current,dt);
     }
 

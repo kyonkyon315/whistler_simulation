@@ -14,9 +14,8 @@ class Developper{
     using Index = int;
 
 private:
-    DistributionFunction k1;
-    DistributionFunction k2;
-    DistributionFunctionDevelopper developper;
+    
+    DistributionFunctionDevelopper distribution_function_developper;
     CurrentCalculator current_calculator;
     FDTDSolver  fdtd_solver;
 
@@ -29,13 +28,21 @@ public:
         const AxisInfo_theta& axis_info_v_theta,
         const AxisInfo_phi& axis_info_v_phi
     ): 
-        k1(f),            // ← コピーコンストラクタを使って初期化
-        k2(f),
-        developper(),     // ← デフォルトコンストラクタを呼ぶ（必要なら引数付きに変更）
-        current_calculator(axis_info_x,axis_info_vr,axis_info_v_theta,axis_info_v_phi),
+        distribution_function_developper(
+            axis_info_x,
+            axis_info_vr,
+            axis_info_v_theta,
+            axis_info_v_phi),
+        current_calculator(
+            axis_info_x,
+            axis_info_vr,
+            axis_info_v_theta,
+            axis_info_v_phi),
         fdtd_solver()
     {
     }
+
+   
 
     void update(
         DistributionFunction& f,
@@ -43,16 +50,60 @@ public:
         Current& current,
         Value dt
     ){
-        developper.deffirenciate(f,field,current,"main",k1);//k1=df/dt
-        k1.mul(dt/2.);//k1=k1*dt/2  
-        k1.add(f);//k1=f+k1  k1=f(t+dt/2)
-        current_calculator.calc(k1,current);//k1->current(t+dt/2)
-        fdtd_solver.calc(k1,current,field,"main");//field(t+dt)を計算
-        developper.deffirenciate(k1,field,current,"half",k2);//k2=dfdt(t+dt/2)
-        k2.mul(dt);//k2=k2*dt
-        f.add(k2);
-        fdtd_solver.calc(f,current,field,"half")//current(t+dt)を計算
+    /*
+    splitting 法により計算
+    # 1: x 半ステップ
+    f = Advect_x(f, dt/2)
 
+    # 2: compute J (optionally), advance fields half step
+    J = compute_current(f)
+    E,B = FDTD_update(E,B,J, dt/2)
+
+    # 3: E 半ステップ
+    f = Advect_v_by_E(f, E, dt/2)
+
+    # 4: B フルステップ
+    f = Advect_v_by_B(f, B, dt)   # 速度空間での回転（逆追跡＋補間）
+
+    # 5: E 半ステップ
+    f = Advect_v_by_E(f, E, dt/2)
+
+    # 6: compute J, advance fields last half step
+    J = compute_current(f)
+    E,B = FDTD_update(E,B,J, dt/2)
+
+    # 7: x 半ステップ
+    f = Advect_x(f, dt/2)
+
+    # now f,E,B are at t^{n+1}
+    
+    */
+        distribution_function_developper.advect_x(f,dt/2);
+        //fをv・∇fの寄与に基づきdt/2発展
+
+        current_calculator.calc(f,current);
+        //電流を計算してcurrentに格納
+
+        fdtd_solver.develop(f,current,dt/2,field);
+        //fieldをfdtdに基づきdt/2 発展
+
+        distribution_function_developper.advect_E(f,field,dt/2);
+        //fをqE・∇_v fの寄与に基づきdt/2発展
+
+        distribution_function_developper.advect_B(f,field,dt);
+        //fをqVxB・∇_v fの寄与に基づきdt発展
+        
+        distribution_function_developper.advect_E(f,field,dt/2);
+        //fをqE・∇_v fの寄与に基づきdt/2発展
+
+        current_calculator.calc(f,current);
+        //電流を計算してcurrentに格納
+
+        fdtd_solver.develop(f,current,dt/2,field);
+        //fieldをfdtdに基づきdt/2 発展
+
+        distribution_function_developper.advect_x(f,dt/2);
+        //fをv・∇fの寄与に基づきdt/2発展
     }
 };
 

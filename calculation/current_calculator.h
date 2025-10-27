@@ -31,6 +31,8 @@ public:
         Index r_size = axis_r.get_num_grid();
         Index t_size = axis_t.get_num_grid();
         Index p_size = axis_p.get_num_grid();
+        
+        #pragma omp parallel for
         for(Index x=0;x<x_size;++x){
             target.at<Direction::x>(x) = 0.;
             target.at<Direction::y>(x) = 0.;
