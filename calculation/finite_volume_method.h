@@ -67,15 +67,15 @@ static inline Value calc_flux_rightward(
     else
         L_neg = std::max(2.0*(f_min - f0), (f0 - fm1));
 
-    Value U = nyu * f0
-            + nyu*(1.0 - nyu)*(2.0 - nyu)*L_pos
-            + nyu*(1.0 - nyu)*(1.0 + nyu)*L_neg;
+    Value U = (f0
+            + (1.0 - nyu)*(2.0 - nyu)*L_pos
+            + (1.0 - nyu)*(1.0 + nyu)*L_neg)*nyu;
 
     return U;
 }
 
 // 修正版：最悪ケースの7点を受け取り、符号に応じて正しいセンタリングを行う
-Value finite_volume_method_signed(
+Value finite_volume_method(
     Value f_im3, Value f_im2, Value f_im1,
     Value f_i,
     Value f_ip1, Value f_ip2, Value f_ip3,

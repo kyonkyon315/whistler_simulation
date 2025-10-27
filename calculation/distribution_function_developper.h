@@ -67,10 +67,12 @@ public:
                         Value f_i         = f.at(ix    , r, t, p);
                         Value f_i_plus_1  = f.at(ix + 1, r, t, p);
                         Value f_i_plus_2  = f.at(ix + 2, r, t, p);
+                        Value f_i_plus_3  = f.at(ix + 3, r, t, p);
 
                         Value delta = finite_volume_method(
                             f_i_minus_3, f_i_minus_2, f_i_minus_1,
-                            f_i, f_i_plus_1, f_i_plus_2,
+                            f_i, 
+                            f_i_plus_1, f_i_plus_2, f_i_plus_3,
                             nyu
                         );
 
@@ -88,7 +90,6 @@ public:
 
     //fをqE・∇_v fの寄与に基づきdt/2発展
     void advect_E(DistributionFunction &f,const ElectroMagneticField &,Value dt){
-
     }
 
     //fをqVxB・∇_v fの寄与に基づきdt発展
